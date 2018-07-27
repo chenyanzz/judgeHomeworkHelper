@@ -19,6 +19,8 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <PlatformToolset>v141</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+    <CLRSupport>false</CLRSupport>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
@@ -120,10 +122,14 @@
     <QtMoc Include="judgeHomeworkHelper.h" />
   </ItemGroup>
   <ItemGroup>
-    <QtUic Include="judgeHomeworkHelper.ui" />
+    <QtRcc Include="judgeHomeworkHelper.qrc" />
   </ItemGroup>
   <ItemGroup>
-    <QtRcc Include="judgeHomeworkHelper.qrc" />
+    <None Include="Todo.md" />
+    <None Include="webHelper.dll" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="webHelper.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Condition="Exists('$(QtMsBuild)\qt.targets')">

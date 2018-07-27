@@ -43,13 +43,17 @@
     </QtMoc>
   </ItemGroup>
   <ItemGroup>
-    <QtUic Include="judgeHomeworkHelper.ui">
-      <Filter>Form Files</Filter>
-    </QtUic>
-  </ItemGroup>
-  <ItemGroup>
     <QtRcc Include="judgeHomeworkHelper.qrc">
       <Filter>Resource Files</Filter>
     </QtRcc>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="webHelper.dll" />
+    <None Include="Todo.md" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="webHelper.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

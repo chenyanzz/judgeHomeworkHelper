@@ -1,7 +1,11 @@
-#pragma once
+﻿#pragma once
 
 #include <QtWidgets/QMainWindow>
 #include "ui_judgeHomeworkHelper.h"
+#include <QHBoxLayout>
+#include <QVBoxLayout>
+#include <QTextBrowser>
+#include <QTreeWidget>
 
 class judgeHomeworkHelper : public QMainWindow
 {
@@ -10,6 +14,10 @@ class judgeHomeworkHelper : public QMainWindow
 public:
 	judgeHomeworkHelper(QWidget *parent = Q_NULLPTR);
 
+	void diff();
+
 private:
-	Ui::judgeHomeworkHelperClass ui;
+	QTreeWidget * tree_homework;
+	QTextBrowser* text_rightAnswer;
+	QTextBrowser* text_stuAnswer;
 };
