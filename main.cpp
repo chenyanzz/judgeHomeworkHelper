@@ -21,7 +21,9 @@ int main(int argc, char* argv[]) {
 
 using namespace webHelper;
 
+//只返回可以判的
 QVector<Homework> parseHomeworkList();
+QVector<Homework> parseHomeworkList_caseEnd(bool hasEnded);
 void parseHomework(Homework& homework);
 void do_login(char* username, char* password);
 
@@ -35,7 +37,7 @@ void test() {
 	do_login(username, password);
 
 	// qDebug() << homeWorkList;
-	auto hwlist = parseHomeworkList();
+	auto hwlist = parseHomeworkList_caseEnd();
 	auto& hw = hwlist[0];
 	parseHomework(hw);
 }
@@ -115,7 +117,14 @@ Student parseOneStu(const QJsonObject& stu) {
 }
 
 QVector<Homework> parseHomeworkList() {
-	QString s = getHomeworkList("true");
+	auto hwlist_1 = parseHomeworkList_caseEnd(true);
+	auto hwlist_2 = parseHomeworkList_caseEnd(false);
+	return hwlist_1 + hwlist_2;
+}
+
+
+QVector<Homework> parseHomeworkList_caseEnd(bool hasEnded) {
+	QString s = getHomeworkList(hasEnded?"true":"false");
 
 	QJsonDocument hwData = parseJson(s);
 	qDebug() << hwData;
@@ -127,6 +136,7 @@ QVector<Homework> parseHomeworkList() {
 		Clazz cls;
 		cls.name = clsname;
 		cls.url = val.toObject()["url"].toString();
+		if (cls.url.isEmpty())continue;
 		auto it = find_if(homeworks.begin(), homeworks.end(), [&](Homework& hw) { return hw.name == hwname; });
 		if(it == homeworks.end()) {
 			Homework hw;
