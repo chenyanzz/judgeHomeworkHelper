@@ -37,7 +37,7 @@ void test() {
 	do_login(username, password);
 
 	// qDebug() << homeWorkList;
-	auto hwlist = parseHomeworkList_caseEnd();
+	auto hwlist = parseHomeworkList();
 	auto& hw = hwlist[0];
 	parseHomework(hw);
 }
@@ -127,7 +127,7 @@ QVector<Homework> parseHomeworkList_caseEnd(bool hasEnded) {
 	QString s = getHomeworkList(hasEnded?"true":"false");
 
 	QJsonDocument hwData = parseJson(s);
-	qDebug() << hwData;
+	// qDebug() << hwData;
 
 	QVector<Homework> homeworks;
 	for(QJsonValue val : hwData.array()) {
