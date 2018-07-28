@@ -1,4 +1,8 @@
-﻿#pragma once
+﻿// Created by cy on 2018/07/28
+// 
+// 作业数据的结构体定义
+#pragma once
+
 #include <QString>
 #include <QVector>
 

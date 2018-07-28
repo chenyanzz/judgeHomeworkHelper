@@ -26,21 +26,21 @@ namespace QT_NAMESPACE {
 }
 #endif
 
-int QT_RCC_MANGLE_NAMESPACE(qInitResources_judgeHomeworkHelper)();
-int QT_RCC_MANGLE_NAMESPACE(qInitResources_judgeHomeworkHelper)()
+int QT_RCC_MANGLE_NAMESPACE(qInitResources_judgeHomeworkWindow)();
+int QT_RCC_MANGLE_NAMESPACE(qInitResources_judgeHomeworkWindow)()
 {
     return 1;
 }
 
-int QT_RCC_MANGLE_NAMESPACE(qCleanupResources_judgeHomeworkHelper)();
-int QT_RCC_MANGLE_NAMESPACE(qCleanupResources_judgeHomeworkHelper)()
+int QT_RCC_MANGLE_NAMESPACE(qCleanupResources_judgeHomeworkWindow)();
+int QT_RCC_MANGLE_NAMESPACE(qCleanupResources_judgeHomeworkWindow)()
 {
     return 1;
 }
 
 namespace {
    struct initializer {
-       initializer() { QT_RCC_MANGLE_NAMESPACE(qInitResources_judgeHomeworkHelper)(); }
-       ~initializer() { QT_RCC_MANGLE_NAMESPACE(qCleanupResources_judgeHomeworkHelper)(); }
+       initializer() { QT_RCC_MANGLE_NAMESPACE(qInitResources_judgeHomeworkWindow)(); }
+       ~initializer() { QT_RCC_MANGLE_NAMESPACE(qCleanupResources_judgeHomeworkWindow)(); }
    } dummy;
 }
