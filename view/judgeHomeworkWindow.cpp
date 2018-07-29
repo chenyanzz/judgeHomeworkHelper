@@ -3,7 +3,7 @@
 #include <QInputDialog>
 #include <QStringListModel>
 #include "loginWindow.h"
-#include "model/model.h"
+#include "model/zhixueHelper.h"
 #include "model/HomeworkModel.h"
 #include "model/WebHelper.h"
 #include <QDebug>
@@ -68,8 +68,8 @@ void judgeHomeworkWindow::init() {
 	auto login_window = qobject_cast<loginWindow *>(sender());
 	QString username = login_window->ui.lineEdit_username->text();
 	QString password = login_window->ui.lineEdit_password->text();
-	if(!do_login(username, password)) {
-		do_lib_init(); //重新加载http，防止出现验证码
+	if(!zxhelper.do_login(username, password)) {
+		zxhelper = zhixueHelper(); //重新加载http，防止出现验证码
 		login_window->show();
 	}
 	login_window->hide();
@@ -79,7 +79,7 @@ void judgeHomeworkWindow::init() {
 }
 
 void judgeHomeworkWindow::setHomeworkTreeData() {
-	homeworks = parseHomeworkList();
+	homeworks = zxhelper.parseHomeworkList();
 
 	if(homeworks.size() == 0) {
 		auto root = new QTreeWidgetItem;
@@ -121,7 +121,9 @@ void judgeHomeworkWindow::collapseOthers(QTreeWidgetItem* item) {
 	connect(tree_homework, SIGNAL(itemExpanded(QTreeWidgetItem*)), this, SLOT(collapseOthers(QTreeWidgetItem*)));
 	int index = tree_homework->indexOfTopLevelItem(item);
 	current_homework = homeworks[index];
-	parseHomework(current_homework);
+	zxhelper.parseHomework(current_homework);
+
+	zxhelper.setOneMark(current_homework, 0, 0, 4, 1);
 }
 
 void judgeHomeworkWindow::showHomework(QTreeWidgetItem* item, int column) {

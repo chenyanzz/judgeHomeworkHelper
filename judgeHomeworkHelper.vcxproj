@@ -123,11 +123,10 @@
     </QtRcc>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="model\zhixueHelper.cpp" />
     <ClCompile Include="view\judgeHomeworkWindow.cpp" />
     <ClCompile Include="view\loginWindow.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="model\communication.cpp" />
-    <ClCompile Include="model\parser.cpp" />
     <ClCompile Include="model\WebHelper.cpp" />
     <ClCompile Include="view\WaitPopupWindow.cpp" />
   </ItemGroup>
@@ -135,9 +134,9 @@
     <QtMoc Include="view\judgeHomeworkWindow.h" />
   </ItemGroup>
   <ItemGroup>
-    <QtRcc Include="view\judgeHomeworkWindow.qrc" />
-  </ItemGroup>
-  <ItemGroup>
+    <None Include="testData\ans.json" />
+    <None Include="testData\clazz.json" />
+    <None Include="testData\homeworkList.json" />
     <None Include="Todo.md" />
     <None Include="webHelper.dll" />
   </ItemGroup>
@@ -147,10 +146,13 @@
     <QtMoc Include="view\loginWindow.h" />
     <ClInclude Include="model\HomeworkModel.h" />
     <ClInclude Include="model\WebHelper.h" />
-    <ClInclude Include="model\model.h" />
+    <ClInclude Include="model\zhixueHelper.h" />
   </ItemGroup>
   <ItemGroup>
     <QtUic Include="view\LoginWindow.ui" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="assets\loading.gif" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Condition="Exists('$(QtMsBuild)\qt.targets')">

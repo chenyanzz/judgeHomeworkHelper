@@ -1,0 +1,36 @@
+{
+  "answer": "{\"text\":\"A 肌肉组织，收缩和舒张、使机体产生运动\\nB 结缔组织，支撑、链接、保护、营养\\nC 神经组织，调节调控作用\\nD 上皮组织，保护、分泌\"}",
+  "answerRecord": {
+    "completeTopicCount": 0,
+    "isSubmitted": true,
+    "markScore": 0,
+    "read": false,
+    "score": 0,
+    "topicPackage": {
+      "end": false,
+      "id": "f0f71e91-ddf9-4b91-abf1-5cc4777f15ff",
+      "seqNO": 0,
+      "topicCount": 0
+    },
+    "user": {
+      "clazz": { "code": "4444000020000293601" },
+      "id": "4444000020019479284",
+      "name": "刘佳宜"
+    },
+    "wasteTime": 0
+  },
+  "createTime": 1532226028000,
+  "id": "c31ed8c5-6801-4084-b3d7-f63145733eb7",
+  "markScore": 2,
+  "marked": false,
+  "read": false,
+  "resultType": "CORRECT",
+  "topic": {
+    "id": "1daed754-5432-4cd3-b845-a16eee6b1c00",
+    "isSubjective": true,
+    "score": 0,
+    "seqNO": 21,
+    "subTopicSort": 1
+  },
+  "updateTime": 1532694860000
+}

@@ -3,8 +3,9 @@
 #include <QWidget>
 #include <QTextBrowser>
 #include <QTreeWidget>
-#include "model/homeworkModel.h"
 #include <QVector>
+#include "model/homeworkModel.h"
+#include "model/zhixueHelper.h"
 
 class judgeHomeworkWindow : public QWidget
 {
@@ -24,6 +25,8 @@ private:
 	QTreeWidget * tree_homework;
 	QTextBrowser* text_rightAnswer;
 	QTextBrowser* text_stuAnswer;
+
+	zhixueHelper zxhelper;
 
 	QVector<Homework> homeworks;
 	Homework current_homework;

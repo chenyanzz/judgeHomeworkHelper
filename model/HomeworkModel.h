@@ -5,6 +5,7 @@
 
 #include <QString>
 #include <QVector>
+#include <QJsonObject>
 
 struct Answer {
 	int seqNumber; //题号
@@ -12,20 +13,41 @@ struct Answer {
 	bool isPic = false;
 	double mark;
 	QString ans;
+
+private:
+	friend class zhixueHelper;
+	QString topicPackId;
+	QJsonObject topic;
 };
 
 struct Student {
 	QString name;
 	QVector<Answer> answers;
+
+private:
+	friend class zhixueHelper;
+	QString userId;
 };
 
 struct Clazz {
-	QString url;
 	QString name;
 	QVector<Student> students;
+
+private:
+	friend class zhixueHelper;
+	QString homeworkId;
+	QString url;
+};
+
+struct Section {
+	QString name;
+	QString correctAnswer;
+	double fullMark;
 };
 
 struct Homework {
 	QString name;
+	bool hasEnded;
 	QVector<Clazz> classes;
+	QVector<Section> sections;
 };

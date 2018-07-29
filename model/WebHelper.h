@@ -5,7 +5,8 @@
 
 class WebHelper
 {
-public:
+	friend class zhixueHelper;
+protected:
 	using func_login_t = cstr (*)(cstr username, cstr password);
 	using func_getHomeworkList_t = cstr (*)(cstr hasEnd); //"true" or "false"
 	using func_getHomeworkFromUrl_t = cstr (*)(cstr url);
@@ -21,4 +22,5 @@ public:
 	static QLibrary libWebHelper;
 
 	static bool initLib();
+	static void closeLib();
 };

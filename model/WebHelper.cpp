@@ -6,7 +6,7 @@ WebHelper::func_getHomeworkList_t WebHelper::getHomeworkList;
 WebHelper::func_getHomeworkFromUrl_t WebHelper::getHomeworkFromUrl;
 WebHelper::func_saveMark_t WebHelper::saveMark;
 
-const QString WebHelper::lib_name="webHelper.dll";
+const QString WebHelper::lib_name = "webHelper.dll";
 QLibrary WebHelper::libWebHelper(lib_name);
 
 bool WebHelper::initLib() {
@@ -21,4 +21,13 @@ bool WebHelper::initLib() {
 	saveMark = (func_saveMark_t)libWebHelper.resolve("C_SaveCorrectResult");
 
 	return login && getHomeworkList && getHomeworkFromUrl && saveMark;
+}
+
+void WebHelper::closeLib() {
+	login = nullptr;
+	getHomeworkList = nullptr;
+	getHomeworkFromUrl = nullptr;
+	saveMark = nullptr;
+
+	libWebHelper.unload();
 }

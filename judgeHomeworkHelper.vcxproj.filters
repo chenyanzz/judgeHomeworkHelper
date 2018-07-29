@@ -33,12 +33,6 @@
     <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="model\parser.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="model\communication.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="model\WebHelper.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -51,10 +45,16 @@
     <ClCompile Include="view\WaitPopupWindow.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="model\zhixueHelper.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="webHelper.dll" />
     <None Include="Todo.md" />
+    <None Include="testData\ans.json" />
+    <None Include="testData\clazz.json" />
+    <None Include="testData\homeworkList.json" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="common.h">
@@ -63,13 +63,13 @@
     <ClInclude Include="model\HomeworkModel.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="model\model.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="model\WebHelper.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="view\WaitPopupWindow.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="model\zhixueHelper.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -82,13 +82,11 @@
     </QtMoc>
   </ItemGroup>
   <ItemGroup>
-    <QtRcc Include="view\judgeHomeworkWindow.qrc">
-      <Filter>Resource Files</Filter>
-    </QtRcc>
-  </ItemGroup>
-  <ItemGroup>
     <QtUic Include="view\LoginWindow.ui">
       <Filter>Form Files</Filter>
     </QtUic>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="assets\loading.gif" />
   </ItemGroup>
 </Project>
