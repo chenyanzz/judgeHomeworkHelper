@@ -34,7 +34,7 @@ void zhixueHelper::lib_init() {
 bool zhixueHelper::do_login(const QString& _username, const QString& _password) {
 	QString err = WebHelper::login(QString2Ascii(_username).c_str(), QString2Ascii(_password).c_str());
 	if(err != "登录成功！") {
-		QMessageBox::critical(nullptr, "登录错误", err);
+		QMessageBox::warning(nullptr, "登录错误：", err);
 		return false;
 	}
 	return true;
@@ -44,8 +44,7 @@ QJsonDocument zhixueHelper::parseJson(const QString& s) {
 	QJsonParseError err;
 	QJsonDocument json = QJsonDocument::fromJson(s.toUtf8(), &err);
 	if(err.error != QJsonParseError::NoError) {
-		QMessageBox::critical(nullptr, "json解析错误", err.errorString());
-		exit(-1);
+		this->err = "json解析错误" + err.errorString();
 	}
 	return json;
 }
@@ -56,8 +55,16 @@ Answer zhixueHelper::parseOneAnswer(const QJsonObject& o) {
 	ans.hasMarked = o["resultType"].toString() != "UNKNOWN";
 	auto ans_obj = parseJson(o["answer"].toString()).object();
 	ans.isPic = ans_obj.contains("pic");
-	if(ans.isPic)ans.ans = ans_obj["pic"].toString();
-	else ans.ans = ans_obj["text"].toString();
+	if(ans.isPic)qDebug() << ans_obj;
+	if(ans.isPic) {
+		auto& arr = ans_obj["pic"].toArray();
+		for(auto& val : arr) {
+			auto& o = val.toObject();
+			ans.pic_urls.push_back(o["url"].toString());
+		}
+	} else {
+		ans.text = ans_obj["text"].toString();
+	}
 	ans.mark = o["markScore"].toDouble();
 	ans.topic = o["topic"].toObject();
 	ans.topic.remove("score");
@@ -92,9 +99,7 @@ Student zhixueHelper::parseOneStu(const QJsonObject& stu) {
 
 QVector<Homework> zhixueHelper::parseHomeworkList_caseEnd(bool hasEnded) {
 	QString s = WebHelper::getHomeworkList(hasEnded ? "true" : "false");
-
 	QJsonDocument hwData = parseJson(s);
-
 	// qDebug() << hwData;
 
 	QVector<Homework> homeworks;
@@ -125,8 +130,8 @@ QVector<Homework> zhixueHelper::parseHomeworkList_caseEnd(bool hasEnded) {
 }
 
 template <typename Function>
-void zhixueHelper::CreateAndWaitForEnd(Function f) {
-	WaitPopupWindow p("正在加载智学网数据");
+void zhixueHelper::CreateAndWaitForEnd(Function f, QString msg) {
+	WaitPopupWindow p(msg);
 	p.show();
 	QThread* thread = QThread::create(f);
 	thread->start();
@@ -143,49 +148,77 @@ QVector<Homework> zhixueHelper::parseHomeworkList() {
 	CreateAndWaitForEnd([&]() {
 		hwlist.append(parseHomeworkList_caseEnd(true));
 		hwlist.append(parseHomeworkList_caseEnd(false));
-	});
+	}, "正在加载作业列表");
 	return hwlist;
 }
 
 void zhixueHelper::parseHomework(Homework& homework) {
+	if(homework.sections.size() != 0)return;
 	CreateAndWaitForEnd([&]() {
+		{
+			QString sections = WebHelper::getHomeworkSectionFromUrl(QString2Ascii(homework.classes[0].url).c_str());
+			QJsonDocument doc = parseJson(sections);
+			homework.sections.push_back(Section()); //seqNo从1开始
+			for(auto& val : doc.array()) {
+				auto& o = val.toObject()["topicDetail"].toObject();
+				Section sec;
+				sec.fullMark = o["score"].toDouble();
+				sec.answerHtml = o["answerHtml"].toString();
+				sec.rawHtml = o["rawHtml"].toString();
+				homework.sections.push_back(sec);
+			}
+		}
 		for(auto& clazz : homework.classes) {
-			QString hwdata = WebHelper::getHomeworkFromUrl(QString2Ascii(clazz.url).c_str());
-			QJsonDocument clsData = parseJson(hwdata);
-			for(auto v : clsData.array()) {
+			QString answerDetail = WebHelper::getHomeworkAnswerFromUrl(QString2Ascii(clazz.url).c_str());
+			QJsonDocument doc = parseJson(answerDetail);
+			for(auto v : doc.array()) {
 				clazz.students.push_back(parseOneStu(v.toObject()));
 			}
 		}
-	});
+	}, "正在加载作业详情");
 }
 
-bool zhixueHelper::setOneMark(Homework& homework, int clazz_index,
-	int student_index, int answer_index ,int mark) {
+bool zhixueHelper::uploadOneMark(Homework& homework, int clazz_index,
+	int student_index, int answer_index, double mark) {
 	auto& clazz = homework.classes[clazz_index];
 	auto& student = clazz.students[student_index];
 	auto& ans = student.answers[answer_index];
-	if (mark != -1)ans.mark = mark;
+	if(mark != -1)ans.mark = mark;
 
 	QJsonObject ret;
 	ret.insert("topic", ans.topic);
 	ret.insert("markScore", ans.mark);
 
 	QString type;
-	// if (ans.mark == 0)type = "WRONG";
-	// else if (homework.sections[ans.answer_index].fullMark == ans.mark)type = "CORRECT";
-	// else type = "HALFCORRECT";
-	if (ans.mark == 0)type = "WRONG";
-	else if (2 == ans.mark)type = "CORRECT";
+	if(ans.mark == 0)type = "WRONG";
+	else if(homework.sections[ans.seqNumber].fullMark == ans.mark)type = "CORRECT";
 	else type = "HALFCORRECT";
 
 	ret.insert("resultType", type);
-	std::string json =  QString2Ascii(QString::fromUtf8(QJsonDocument(ret).toJson()));
+	std::string json = QString2Ascii(QString::fromUtf8(QJsonDocument(ret).toJson()));
 	QString s = WebHelper::saveMark(QString2Ascii(student.userId).c_str(), QString2Ascii(clazz.homeworkId).c_str(), QString2Ascii(ans.topicPackId).c_str(), json.c_str());
 
-	if(s!="提交成功！") {
-		QMessageBox::warning(nullptr, "成绩上传错误", s);
+	if(s != "提交成功！") {
+		err = s;
 		return false;
 	}
 
 	return true;
+}
+
+bool zhixueHelper::uploadOneMark(const UploadMarkPack& p) {
+	return uploadOneMark(*p.homework, p.class_index, p.student_index, p.section_index, p.mark);
+}
+
+bool zhixueHelper::uploadMarks(QVector<UploadMarkPack>& packs) {
+	bool b;
+	CreateAndWaitForEnd([&]() {
+		for(auto& p : packs) {
+			if(!uploadOneMark(p)) {
+				b = false;
+			}
+		}
+		b = true;
+	}, "正在上传得分数据");
+	return b;
 }

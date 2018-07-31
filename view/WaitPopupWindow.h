@@ -5,8 +5,11 @@
 #pragma once
 #include <QWidget>
 #include <QString>
+#include <QLabel>
 
 class WaitPopupWindow : public QWidget{
 public:
 	WaitPopupWindow(QString msg, QWidget* parent=nullptr);
+protected:
+	QLabel * label_process;
 };

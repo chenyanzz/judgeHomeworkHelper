@@ -12,7 +12,8 @@ struct Answer {
 	bool hasMarked;
 	bool isPic = false;
 	double mark;
-	QString ans;
+	QString text;
+	QStringList pic_urls;
 
 private:
 	friend class zhixueHelper;
@@ -40,8 +41,8 @@ private:
 };
 
 struct Section {
-	QString name;
-	QString correctAnswer;
+	QString rawHtml;//题目的frame
+	QString answerHtml;
 	double fullMark;
 };
 
@@ -50,4 +51,12 @@ struct Homework {
 	bool hasEnded;
 	QVector<Clazz> classes;
 	QVector<Section> sections;
+};
+
+struct UploadMarkPack {
+	Homework* homework;
+	int class_index;
+	int student_index;
+	int section_index;
+	double mark;
 };

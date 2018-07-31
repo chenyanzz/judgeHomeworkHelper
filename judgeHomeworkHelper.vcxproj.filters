@@ -55,6 +55,7 @@
     <None Include="testData\ans.json" />
     <None Include="testData\clazz.json" />
     <None Include="testData\homeworkList.json" />
+    <None Include="testData\secData.json" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="common.h">

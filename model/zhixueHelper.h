@@ -14,14 +14,17 @@ public:
 	//只返回可以判的
 	QVector<Homework> parseHomeworkList();
 	void parseHomework(Homework& homework);
-	bool setOneMark(Homework& homework, int clazz_index, int student_index, int answer_index, int mark = -1);
+	bool uploadOneMark(Homework& homework, int clazz_index, int student_index, int answer_index, double mark = -1);
+	bool uploadOneMark(const UploadMarkPack& p);
+	bool uploadMarks(QVector<UploadMarkPack>& packs);
+	QString err;
+
 private:
 	void lib_init();
 	QJsonDocument parseJson(const QString& s);
 	Answer parseOneAnswer(const QJsonObject& o);
 	Student parseOneStu(const QJsonObject& stu);
 	QVector<Homework> parseHomeworkList_caseEnd(bool hasEnded);
-
 	template <typename Function>
-	void CreateAndWaitForEnd(Function f);
+	void CreateAndWaitForEnd(Function f,QString msg);
 };

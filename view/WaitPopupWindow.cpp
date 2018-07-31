@@ -5,6 +5,8 @@
 #include <QIcon>
 
 WaitPopupWindow::WaitPopupWindow(QString msg, QWidget* parent) : QWidget(parent) {
+	this->setWindowTitle("请等待");
+
 	QLabel* label_text = new QLabel(msg, parent);
 	auto layout = new QHBoxLayout(this);
 	this->setLayout(layout);

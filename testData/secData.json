@@ -1,0 +1,64 @@
+{
+  "answerCount": 0,
+  "seqtNoOfTopicPack": [ 25 ],
+  "topicDetail": {
+    "analysisHtml": "<div>\n 略\n</div>",
+    "answerHtml": "<div>\n 略\n</div>",
+    "difficulty": {
+      "code": "03",
+      "name": "一般",
+      "value": 3
+    },
+    "grades": [
+      {
+        "code": "07",
+        "name": "七年级"
+      }
+    ],
+    "knowledges": [
+      [
+        {
+          "code": "130449000n",
+          "name": "生物体的结构层次"
+        }
+      ]
+    ],
+    "multiSubTopic": false,
+    "optionAnswer": [],
+    "paperName": "第2周暑假作业",
+    "phase": {
+      "code": "04",
+      "name": "初中"
+    },
+    "quality": 0,
+    "questionCount": 1,
+    "rawHtml": "一个html",
+    "rawImage": "http://bj.download.cycore.cn/question/557/4b97b344-cf12-4f00-93d6-7d0136da473c.png",
+    "score": 2,
+    "section": {
+      "categoryCode": "04",
+      "categoryName": "填空题",
+      "code": "130403",
+      "isSubjective": true,
+      "name": "填空题",
+      "sort": 5
+    },
+    "seqNo": 25,
+    "subTopics": [
+      {
+        "answer": "略",
+        "desc": "一个html",
+        "score": 0
+      }
+    ],
+    "subject": {
+      "code": "13",
+      "name": "生物"
+    },
+    "subjectiveAnswerList": [ "略" ],
+    "topicId": "0c1d60cc-c0e3-4b97-97b9-711801f6b7ab",
+    "topicNum": "1022766969",
+    "type": "04",
+    "version": "1"
+  }
+}
