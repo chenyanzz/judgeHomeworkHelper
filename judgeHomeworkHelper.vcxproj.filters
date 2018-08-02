@@ -48,6 +48,9 @@
     <ClCompile Include="model\zhixueHelper.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="view\browseSectionWindow.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="webHelper.dll" />
@@ -81,9 +84,15 @@
     <QtMoc Include="view\loginWindow.h">
       <Filter>Header Files</Filter>
     </QtMoc>
+    <QtMoc Include="view\browseSectionWindow.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
   </ItemGroup>
   <ItemGroup>
     <QtUic Include="view\LoginWindow.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+    <QtUic Include="view\browseSectionWindow.ui">
       <Filter>Form Files</Filter>
     </QtUic>
   </ItemGroup>

@@ -11,11 +11,14 @@
 #include "model/zhixueHelper.h"
 #include <QPushButton>
 #include <QLabel>
+#include "browseSectionWindow.h"
 
 class judgeHomeworkWindow: public QWidget {
 Q_OBJECT
 public:
 	judgeHomeworkWindow(QWidget* parent = Q_NULLPTR);
+
+	friend browseSectionWindow;
 
 public Q_SLOTS:
 	void init();
@@ -35,12 +38,14 @@ public Q_SLOTS:
 	void saveMark();
 	void uploadMarks();
 
+	void showSectionWindow();
 protected:
 
 	QLabel* label_class;
 	QLabel* label_sec;
 	QLabel* label_name;
 	QLabel* label_process;
+	QWebEngineView* webview_porcess;
 	QPushButton* btn_prev;
 	QPushButton* btn_next;
 	QTreeWidget* tree_homework;
@@ -51,6 +56,7 @@ protected:
 	QWebEngineView* webview_stuAnswer;
 	QDoubleSpinBox* input_mark;
 	QLabel* label_fullmark;
+	QPushButton* btn_showSection;
 	QPushButton* btn_savemark;
 
 	zhixueHelper zxhelper;
@@ -64,8 +70,6 @@ protected:
 
 	void setHomeworkTreeData();
 	void showAnswer(); //根据三个index变量显示对应的答案数据
-
-	void skipMarkedAnswer();
 
 	void keyPressEvent(QKeyEvent* event) override;
 };

@@ -11,8 +11,6 @@
 #include <QDebug>
 #include <QMessageBox>
 
-#pragma execution_character_set("utf-8")
-
 #define DECL_HW_VAR	\
 	auto& hw = *current_homework;	\
 	auto& cls = hw.classes[class_index];	\
@@ -34,16 +32,17 @@ judgeHomeworkWindow::judgeHomeworkWindow(QWidget* parent)
 	label_sec = new QLabel;
 	label_name = new QLabel;
 	label_process = new QLabel;
+	// webview_porcess = new QWebEngineView;
 	btn_prev = new QPushButton("上一个");
 	btn_next = new QPushButton("下一个");
 	webview_section = new QWebEngineView;
 	webview_rightAnswer = new QWebEngineView;
 	webview_keyword = new QWebEngineView;
-	// webview_stuAnswer = new QTextBrowser;
 	webview_stuAnswer = new QWebEngineView;
 	auto layout_input = new QHBoxLayout;
 	input_mark = new QDoubleSpinBox;
 	label_fullmark = new QLabel;
+	btn_showSection = new QPushButton("查看题目/修改关键词");
 	btn_savemark = new QPushButton("保存成绩");
 
 	//设置布局
@@ -55,10 +54,10 @@ judgeHomeworkWindow::judgeHomeworkWindow(QWidget* parent)
 	layout_left->addWidget(btn_upload);
 
 	layout_right->addLayout(layout_info);
-	layout_right->addWidget(new QLabel("题目"));
-	layout_right->addWidget(webview_section, 3);
-	layout_right->addWidget(new QLabel("标准答案"));
-	layout_right->addWidget(webview_rightAnswer, 1);
+	// layout_right->addWidget(new QLabel("题目"));
+	// layout_right->addWidget(webview_section, 3);
+	// layout_right->addWidget(new QLabel("标准答案"));
+	// layout_right->addWidget(webview_rightAnswer, 1);
 	layout_right->addWidget(new QLabel("关键词"));
 	layout_right->addWidget(webview_keyword, 1);
 	layout_right->addWidget(new QLabel("学生答案"));
@@ -70,6 +69,7 @@ judgeHomeworkWindow::judgeHomeworkWindow(QWidget* parent)
 	layout_info->addWidget(label_name);
 	layout_info->addSpacerItem(new QSpacerItem(0, 0, QSizePolicy::Expanding, QSizePolicy::Minimum));
 	layout_info->addWidget(label_process);
+	// layout_info->addWidget(webview_porcess);
 	layout_info->addWidget(btn_prev);
 	layout_info->addWidget(btn_next);
 
@@ -92,12 +92,13 @@ judgeHomeworkWindow::judgeHomeworkWindow(QWidget* parent)
 	connect(tree_homework, SIGNAL(itemExpanded(QTreeWidgetItem*)), this, SLOT(collapseOthers(QTreeWidgetItem*)));
 	connect(tree_homework, SIGNAL(itemCollapsed(QTreeWidgetItem*)), this, SLOT(onItemCollapsed(QTreeWidgetItem*)));
 	connect(input_mark, SIGNAL(valueChanged(double)), this, SLOT(correctValue(double)));
+	connect(btn_showSection, SIGNAL(clicked()), this, SLOT(showSectionWindow()));
 	connect(btn_savemark, SIGNAL(clicked()), this, SLOT(saveMark()));
 	this->hide();
 }
 
 static QString getColor(int& p) {
-	static QStringList colors = {"Aquamarine", "Chartreuse", "green", "CornflowerBlue", "gold","Cyan","red","DodgerBlue"};
+	static QStringList colors = {"Aquamarine", "Chartreuse", "green", "CornflowerBlue", "gold", "Cyan", "red", "DodgerBlue"};
 	QString color = colors[p];
 	p++;
 	if(p >= colors.size())p = 0;
@@ -115,30 +116,13 @@ void judgeHomeworkWindow::diff() {
 	int p = 0;
 	for(QString keyword : keywords) {
 		auto color = getColor(p);
-		QString str = QString(R"(<span style="background-color:%1;"> %2 </span>)").arg(color).arg(keyword);
+		QString str = QString(R"(<span style="background-color:%1;margin-left:10px;"> %2 </span>)").arg(color).arg(keyword);
 		html_keywords.append(str);
 		html_ans.replace(keyword, str, Qt::CaseSensitive);
 
 	}
 	webview_keyword->setHtml(html_keywords);
 	webview_stuAnswer->setHtml(html_ans);
-
-	// webview_rightAnswer->clear();
-	// QString keywords[] = {"输导", "传输"};
-	// for(QString keyword : keywords) {
-	// 	QString str = QString(R"(<span style="color:%1;"> %2 </span>)").arg(color).arg(keyword);
-	// 	webview_rightAnswer->insertHtml(str);
-	// }
-	//
-	// // webview_stuAnswer->clear();
-	// QString answer = "哈哈哈哈哈哈哈哈A是输导组织哈哈哈哈哈哈哈哈1";
-	// QString html = answer;
-	// for(QString keyword : keywords) {
-	// 	int start = 0;
-	// 	QString str = QString(R"(<span style="color:%1;"> %2 </span>)").arg(color).arg(keyword);
-	// 	html.replace(keyword, str, Qt::CaseSensitive);
-	// }
-	// webview_stuAnswer->setHtml(html);
 }
 
 void judgeHomeworkWindow::init() {
@@ -211,7 +195,7 @@ void judgeHomeworkWindow::showHomework(QTreeWidgetItem* item, int column) {
 	section_index = 0;
 	student_index = 0;
 	DECL_HW_VAR;
-	if (ans.hasMarked)goToNext();
+	if(ans.hasMarked)goToNext();
 	showAnswer();
 }
 
@@ -287,14 +271,23 @@ void judgeHomeworkWindow::showAnswer() {
 	webview_section->setHtml(sec.rawHtml);
 	webview_rightAnswer->setHtml(sec.answerHtml);
 	label_fullmark->setText(QString("(共%1分)").arg(sec.fullMark));
-	QString html;
+
+	if(ans.hasMarked) {
+		input_mark->setSuffix("    (此题已判)");
+		input_mark->setValue(ans.mark);
+	} else {
+		input_mark->setSuffix("");
+		input_mark->setValue(0);
+	}
+
+	QString html_ans;
 	if(ans.isPic) {
 		for(auto& url : ans.pic_urls) {
-			html.append(QString(R"(<img src="%1"/><br>)").arg(url.toHtmlEscaped()));
+			html_ans.append(QString(R"(<img src="%1"/><br>)").arg(url.toHtmlEscaped()));
 		}
 	} else {
-		html = ans.text.toHtmlEscaped();
-		html.replace("\n", "<br>");
+		html_ans = ans.text.toHtmlEscaped();
+		html_ans.replace("\n", "<br>");
 	}
 	diff();
 
@@ -324,6 +317,7 @@ void judgeHomeworkWindow::saveMark() {
 	p.student_index = student_index;
 	p.mark = mark;
 	marksToUpload.push_back(p);
+	ans.hasMarked = true;
 }
 
 void judgeHomeworkWindow::uploadMarks() {
@@ -334,7 +328,12 @@ void judgeHomeworkWindow::uploadMarks() {
 	} else {
 		QMessageBox::information(this, "上传失败", zxhelper.err + "\n请重试");
 	}
+}
 
+void judgeHomeworkWindow::showSectionWindow() {
+	browseSectionWindow w(this);
+	w.setWindowModality(Qt::ApplicationModal);
+	w.show();
 }
 
 #undef DECL_HW_VAR

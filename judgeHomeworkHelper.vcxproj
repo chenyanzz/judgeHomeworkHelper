@@ -124,6 +124,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="model\zhixueHelper.cpp" />
+    <ClCompile Include="view\browseSectionWindow.cpp" />
     <ClCompile Include="view\judgeHomeworkWindow.cpp" />
     <ClCompile Include="view\loginWindow.cpp" />
     <ClCompile Include="main.cpp" />
@@ -143,6 +144,12 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="common.h" />
+    <QtMoc Include="view\browseSectionWindow.h">
+      <IncludePath Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">.\GeneratedFiles;.;$(QTDIR)\include;.\GeneratedFiles\$(ConfigurationName)\.;$(QTDIR)\include\QtCore;$(QTDIR)\include\QtGui;$(QTDIR)\include\QtANGLE;$(QTDIR)\include\QtWidgets;$(QTDIR)\include\QtNetwork;$(QTDIR)\include\QtWebEngine;$(QTDIR)\include\QtWebEngineCore;$(QTDIR)\include\QtWebEngineWidgets</IncludePath>
+      <Define Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">UNICODE;_UNICODE;WIN32;WIN64;QT_DLL;QT_CORE_LIB;QT_GUI_LIB;QT_WIDGETS_LIB;QT_NETWORK_LIB;QT_WEBENGINE_LIB;QT_WEBENGINECORE_LIB;QT_WEBENGINEWIDGETS_LIB</Define>
+      <IncludePath Condition="'$(Configuration)|$(Platform)'=='Release|x64'">.\GeneratedFiles;.;$(QTDIR)\include;.\GeneratedFiles\$(ConfigurationName)\.;$(QTDIR)\include\QtCore;$(QTDIR)\include\QtGui;$(QTDIR)\include\QtANGLE;$(QTDIR)\include\QtWidgets;$(QTDIR)\include\QtNetwork;$(QTDIR)\include\QtWebEngine;$(QTDIR)\include\QtWebEngineCore;$(QTDIR)\include\QtWebEngineWidgets</IncludePath>
+      <Define Condition="'$(Configuration)|$(Platform)'=='Release|x64'">UNICODE;_UNICODE;WIN32;WIN64;QT_DLL;QT_NO_DEBUG;NDEBUG;QT_CORE_LIB;QT_GUI_LIB;QT_WIDGETS_LIB;QT_NETWORK_LIB;QT_WEBENGINE_LIB;QT_WEBENGINECORE_LIB;QT_WEBENGINEWIDGETS_LIB</Define>
+    </QtMoc>
     <ClInclude Include="view\WaitPopupWindow.h" />
     <QtMoc Include="view\loginWindow.h" />
     <ClInclude Include="model\HomeworkModel.h" />
@@ -150,6 +157,7 @@
     <ClInclude Include="model\zhixueHelper.h" />
   </ItemGroup>
   <ItemGroup>
+    <QtUic Include="view\browseSectionWindow.ui" />
     <QtUic Include="view\LoginWindow.ui" />
   </ItemGroup>
   <ItemGroup>
