@@ -3,6 +3,8 @@
 #include <QHBoxLayout>
 #include <QMovie>
 #include <QIcon>
+#include <QThread>
+#include <QApplication>
 
 WaitPopupWindow::WaitPopupWindow(QString msg, QWidget* parent) : QWidget(parent) {
 	this->setWindowTitle("请等待");
@@ -25,4 +27,17 @@ WaitPopupWindow::WaitPopupWindow(QString msg, QWidget* parent) : QWidget(parent)
 	this->setFont(font1);
 	this->setWindowModality(Qt::ApplicationModal);
 	this->setFixedSize(window()->sizeHint());
+	this->setWindowFlags(windowFlags() &~Qt::WindowCloseButtonHint);
+}
+
+void WaitPopupWindow::CreateAndWaitForEnd(QString msg, std::function<void()> f) {
+	WaitPopupWindow p(msg);
+	p.show();
+	QThread* thread = QThread::create(f);
+	thread->start();
+	while (!thread->isFinished()) {
+		QApplication::processEvents();
+	}
+	delete thread;
+	p.hide();
 }

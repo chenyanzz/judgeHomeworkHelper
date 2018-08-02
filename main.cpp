@@ -13,6 +13,8 @@
 char username[] = "zxt2434473";
 char password[] = "2019zhongkao";
 
+#include <view/WaitPopupWindow.h>
+
 int main(int argc, char* argv[]) {
 	QApplication a(argc, argv);
 
@@ -21,9 +23,10 @@ int main(int argc, char* argv[]) {
 	QObject::connect(&login_window, SIGNAL(accepted()), &judge_homework_window, SLOT(init()));
 	login_window.show();
 
-	login_window.ui.lineEdit_username->setText(username);
-	login_window.ui.lineEdit_password->setText(password);
-	login_window.ui.okButton->click();
+	// login_window.ui.lineEdit_username->setText(username);
+	// login_window.ui.lineEdit_password->setText(password);
+	// login_window.ui.okButton->click();
+
 
 	return a.exec();
 }

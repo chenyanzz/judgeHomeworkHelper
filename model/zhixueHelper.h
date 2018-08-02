@@ -25,6 +25,4 @@ private:
 	Answer parseOneAnswer(const QJsonObject& o);
 	Student parseOneStu(const QJsonObject& stu);
 	QVector<Homework> parseHomeworkList_caseEnd(bool hasEnded);
-	template <typename Function>
-	void CreateAndWaitForEnd(Function f,QString msg);
 };

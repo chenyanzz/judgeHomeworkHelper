@@ -41,6 +41,7 @@ public:
     QLabel *label_process;
     QPushButton *btn_prev;
     QPushButton *btn_next;
+    QPushButton *btn_cancel;
     QPushButton *btn_save;
 
     void setupUi(QWidget *browseSectionWindow)
@@ -48,6 +49,10 @@ public:
         if (browseSectionWindow->objectName().isEmpty())
             browseSectionWindow->setObjectName(QStringLiteral("browseSectionWindow"));
         browseSectionWindow->resize(740, 572);
+        QFont font;
+        font.setFamily(QString::fromUtf8("\345\276\256\350\275\257\351\233\205\351\273\221"));
+        browseSectionWindow->setFont(font);
+        browseSectionWindow->setAutoFillBackground(true);
         verticalLayout_2 = new QVBoxLayout(browseSectionWindow);
         verticalLayout_2->setObjectName(QStringLiteral("verticalLayout_2"));
         label_title = new QLabel(browseSectionWindow);
@@ -109,6 +114,11 @@ public:
 
         horizontalLayout_2->addWidget(btn_next);
 
+        btn_cancel = new QPushButton(browseSectionWindow);
+        btn_cancel->setObjectName(QStringLiteral("btn_cancel"));
+
+        horizontalLayout_2->addWidget(btn_cancel);
+
         btn_save = new QPushButton(browseSectionWindow);
         btn_save->setObjectName(QStringLiteral("btn_save"));
 
@@ -133,6 +143,7 @@ public:
         label_process->setText(QApplication::translate("browseSectionWindow", "TextLabel", nullptr));
         btn_prev->setText(QApplication::translate("browseSectionWindow", "\344\270\212\344\270\200\351\242\230", nullptr));
         btn_next->setText(QApplication::translate("browseSectionWindow", "\344\270\213\344\270\200\351\242\230", nullptr));
+        btn_cancel->setText(QApplication::translate("browseSectionWindow", "\345\217\226\346\266\210", nullptr));
         btn_save->setText(QApplication::translate("browseSectionWindow", "\347\241\256\345\256\232", nullptr));
     } // retranslateUi
 

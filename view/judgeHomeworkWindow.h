@@ -39,6 +39,9 @@ public Q_SLOTS:
 	void uploadMarks();
 
 	void showSectionWindow();
+	void saveKeywords();
+
+	void clearRightWindow();
 protected:
 
 	QLabel* label_class;
@@ -62,14 +65,19 @@ protected:
 	zhixueHelper zxhelper;
 	QVector<Homework> homeworks;
 	Homework* current_homework;
+	QMap<QString, QVector<QStringList>> hw_keywords;
 	int class_index;
 	int student_index;
 	int section_index;
 	bool selected_homework;
 	QVector<UploadMarkPack> marksToUpload;
 
+	const QString keywords_data_file_name="hw_keywords.dat";
+
 	void setHomeworkTreeData();
 	void showAnswer(); //根据三个index变量显示对应的答案数据
 
 	void keyPressEvent(QKeyEvent* event) override;
+
+	void readKeywords();
 };

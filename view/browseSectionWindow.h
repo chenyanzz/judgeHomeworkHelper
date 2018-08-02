@@ -13,12 +13,27 @@
 class browseSectionWindow: public QWidget {
 Q_OBJECT
 public:
-	browseSectionWindow(class judgeHomeworkWindow* parent=nullptr);
+	//由judgeHomeworkWindow保证每项作业map都有对应的key，且value.size==sec_size
+	browseSectionWindow(class judgeHomeworkWindow* parent);
 
 	void showSection(int index);
 
+	void saveCurrent();
+
+public Q_SLOTS:
+	void goToPrev();
+	void goToNext();
+	void saveAll();
+	void cancel();
+
+Q_SIGNALS:
+	void savedAll();
+
 protected:
-	class judgeHomeworkWindow* judge_homework_window;
+	judgeHomeworkWindow * judge_homework_window;
+	int index = 0;
+	int size_ans;
+	QVector<QStringList> keywords;
 	Homework* hw;
 	Ui_browseSectionWindow ui;
 };

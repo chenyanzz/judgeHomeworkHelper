@@ -70,9 +70,6 @@
     <ClInclude Include="model\WebHelper.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="view\WaitPopupWindow.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="model\zhixueHelper.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -85,6 +82,9 @@
       <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="view\browseSectionWindow.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="view\WaitPopupWindow.h">
       <Filter>Header Files</Filter>
     </QtMoc>
   </ItemGroup>

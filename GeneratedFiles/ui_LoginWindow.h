@@ -105,6 +105,7 @@ public:
 
         checkBox_keepData = new QCheckBox(loginDialog);
         checkBox_keepData->setObjectName(QStringLiteral("checkBox_keepData"));
+        checkBox_keepData->setChecked(true);
 
         horizontalLayout_3->addWidget(checkBox_keepData);
 
@@ -132,7 +133,6 @@ public:
         QWidget::setTabOrder(checkBox_keepData, okButton);
 
         retranslateUi(loginDialog);
-        QObject::connect(okButton, SIGNAL(clicked()), loginDialog, SLOT(accept()));
 
         QMetaObject::connectSlotsByName(loginDialog);
     } // setupUi

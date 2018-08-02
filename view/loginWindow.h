@@ -13,4 +13,10 @@ Q_OBJECT
 public:
 	loginWindow(QWidget* parent = nullptr);
 	Ui_loginDialog ui;
+	const QString user_data_file_name = "user.dat";
+	QString username, password;
+
+	void loadUserData();
+public Q_SLOTS:
+	void saveUserData();
 };

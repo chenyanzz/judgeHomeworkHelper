@@ -10,13 +10,14 @@
 #include "model/WebHelper.h"
 #include <QDebug>
 #include <QMessageBox>
+#include "WaitPopupWindow.h"
 
 #define DECL_HW_VAR	\
 	auto& hw = *current_homework;	\
 	auto& cls = hw.classes[class_index];	\
 	auto& stu = cls.students[student_index];	\
 	auto& ans = stu.answers[section_index];	\
-	int sec_id = ans.seqNumber;	\
+	int   sec_id = ans.seqNumber;	\
 	auto& sec = hw.sections[sec_id]
 
 judgeHomeworkWindow::judgeHomeworkWindow(QWidget* parent)
@@ -51,7 +52,6 @@ judgeHomeworkWindow::judgeHomeworkWindow(QWidget* parent)
 	layout_main->addLayout(layout_right, 3);
 
 	layout_left->addWidget(tree_homework);
-	layout_left->addWidget(btn_upload);
 
 	layout_right->addLayout(layout_info);
 	// layout_right->addWidget(new QLabel("题目"));
@@ -75,6 +75,8 @@ judgeHomeworkWindow::judgeHomeworkWindow(QWidget* parent)
 
 	layout_input->addWidget(input_mark);
 	layout_input->addWidget(label_fullmark);
+	layout_input->addWidget(btn_upload);
+	layout_input->addWidget(btn_showSection);
 	layout_input->addWidget(btn_savemark);
 
 	//设置属性
@@ -98,7 +100,7 @@ judgeHomeworkWindow::judgeHomeworkWindow(QWidget* parent)
 }
 
 static QString getColor(int& p) {
-	static QStringList colors = {"Aquamarine", "Chartreuse", "green", "CornflowerBlue", "gold", "Cyan", "red", "DodgerBlue"};
+	static QStringList colors = {"Aquamarine", "Chartreuse", "CornflowerBlue", "gold", "Cyan", "Tomato", "DodgerBlue"};
 	QString color = colors[p];
 	p++;
 	if(p >= colors.size())p = 0;
@@ -108,18 +110,18 @@ static QString getColor(int& p) {
 void judgeHomeworkWindow::diff() {
 	DECL_HW_VAR;
 	if(ans.isPic)return;
-	if(ans.seqNumber != 21)return;
-	QStringList keywords = {"肌肉", "结缔", "神经", "上皮"};
+	auto& sec_keywords = hw_keywords[hw.name];
+	QStringList keywords;
+	if(sec_keywords.size() > section_index)keywords = sec_keywords[section_index];
 
 	QString html_keywords;
 	QString html_ans = ans.text;
 	int p = 0;
 	for(QString keyword : keywords) {
 		auto color = getColor(p);
-		QString str = QString(R"(<span style="background-color:%1;margin-left:10px;"> %2 </span>)").arg(color).arg(keyword);
-		html_keywords.append(str);
-		html_ans.replace(keyword, str, Qt::CaseSensitive);
-
+		QString str = QString(R"(<span style="background-color:%1">%2</span>)").arg(color).arg(keyword);
+		html_keywords.append(" " + str + " ");
+		html_ans.replace(keyword, str, Qt::CaseInsensitive);
 	}
 	webview_keyword->setHtml(html_keywords);
 	webview_stuAnswer->setHtml(html_ans);
@@ -136,6 +138,7 @@ void judgeHomeworkWindow::init() {
 	login_window->hide();
 	selected_homework = false;
 	this->show();
+	readKeywords();
 	setHomeworkTreeData();
 }
 
@@ -183,9 +186,14 @@ void judgeHomeworkWindow::collapseOthers(QTreeWidgetItem* except) {
 	int index = tree_homework->indexOfTopLevelItem(except);
 	current_homework = &homeworks[index];
 	zxhelper.parseHomework(*current_homework);
+	auto& hw = *current_homework;
+	if(!hw_keywords.contains(hw.name)) {
+		hw_keywords.insert(hw.name, QVector<QStringList>(hw.classes[0].students[0].answers.size()));
+	}
+
 	selected_homework = true;
 
-	// zxhelper.uploadOneMark(current_homework, 0, 0, 4, 1);
+
 }
 
 void judgeHomeworkWindow::showHomework(QTreeWidgetItem* item, int column) {
@@ -207,6 +215,8 @@ void judgeHomeworkWindow::onItemCollapsed(QTreeWidgetItem* item) {
 }
 
 void judgeHomeworkWindow::correctValue(double val) {
+	if(val == (int)val)return;
+
 	int i = val / 0.5;
 	double d = i * 0.5;
 	input_mark->setValue(d);
@@ -214,7 +224,6 @@ void judgeHomeworkWindow::correctValue(double val) {
 
 void judgeHomeworkWindow::goToPrev() {
 	if(!selected_homework)return;
-	saveMark();
 	DECL_HW_VAR;
 	student_index--;
 	if(student_index < 0) {
@@ -236,7 +245,6 @@ void judgeHomeworkWindow::goToPrev() {
 
 void judgeHomeworkWindow::goToNext() {
 	if(!selected_homework)return;
-	saveMark();
 	DECL_HW_VAR;
 	student_index++;
 	if(student_index >= cls.students.size()) {
@@ -300,6 +308,7 @@ void judgeHomeworkWindow::keyPressEvent(QKeyEvent* event) {
 	switch(event->key()) {
 	case Qt::Key_Enter:
 	case Qt::Key_Return:
+		saveMark();
 		goToNext();
 		break;
 	}
@@ -307,6 +316,7 @@ void judgeHomeworkWindow::keyPressEvent(QKeyEvent* event) {
 }
 
 void judgeHomeworkWindow::saveMark() {
+	if(!selected_homework)return;
 	DECL_HW_VAR;
 	double mark = input_mark->value();
 	if(ans.hasMarked && ans.mark == mark)return;
@@ -331,9 +341,41 @@ void judgeHomeworkWindow::uploadMarks() {
 }
 
 void judgeHomeworkWindow::showSectionWindow() {
-	browseSectionWindow w(this);
-	w.setWindowModality(Qt::ApplicationModal);
-	w.show();
+	if(!selected_homework)return;
+	browseSectionWindow* w = new browseSectionWindow(this);
+	connect(w, SIGNAL(savedAll()), this, SLOT(saveKeywords()));
+	w->show();
+}
+
+void judgeHomeworkWindow::readKeywords() {
+	if(!QFile::exists(keywords_data_file_name))return;
+	QFile f(keywords_data_file_name);
+	f.open(QFile::ReadOnly);
+	QDataStream s;
+	s.setDevice(&f);
+	s >> hw_keywords;
+}
+
+void judgeHomeworkWindow::saveKeywords() {
+	QFile f(keywords_data_file_name);
+	f.open(QFile::Truncate | QFile::WriteOnly);
+	QDataStream s;
+	s.setDevice(&f);
+	s << hw_keywords;
+}
+
+void judgeHomeworkWindow::clearRightWindow() {
+	label_class->clear();
+	label_sec->clear();
+	label_name->clear();
+	label_process->clear();
+	label_fullmark->clear();
+	input_mark->clear();
+	webview_rightAnswer->setHtml("");
+	webview_keyword->setHtml("");
+	webview_porcess->setHtml("");
+	webview_section->setHtml("");
+	webview_stuAnswer->setHtml("");
 }
 
 #undef DECL_HW_VAR

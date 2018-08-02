@@ -55,7 +55,7 @@ Answer zhixueHelper::parseOneAnswer(const QJsonObject& o) {
 	ans.hasMarked = o["resultType"].toString() != "UNKNOWN";
 	auto ans_obj = parseJson(o["answer"].toString()).object();
 	ans.isPic = ans_obj.contains("pic");
-	if(ans.isPic)qDebug() << ans_obj;
+	// if(ans.isPic)qDebug() << ans_obj;
 	if(ans.isPic) {
 		auto& arr = ans_obj["pic"].toArray();
 		for(auto& val : arr) {
@@ -129,32 +129,19 @@ QVector<Homework> zhixueHelper::parseHomeworkList_caseEnd(bool hasEnded) {
 	return homeworks;
 }
 
-template <typename Function>
-void zhixueHelper::CreateAndWaitForEnd(Function f, QString msg) {
-	WaitPopupWindow p(msg);
-	p.show();
-	QThread* thread = QThread::create(f);
-	thread->start();
-	while(!thread->isFinished()) {
-		QApplication::processEvents();
-	}
-	delete thread;
-	p.hide();
-}
-
 QVector<Homework> zhixueHelper::parseHomeworkList() {
 	QVector<Homework> hwlist;
 
-	CreateAndWaitForEnd([&]() {
+	WaitPopupWindow::CreateAndWaitForEnd("正在加载作业列表", [&]() {
 		hwlist.append(parseHomeworkList_caseEnd(true));
 		hwlist.append(parseHomeworkList_caseEnd(false));
-	}, "正在加载作业列表");
+	});
 	return hwlist;
 }
 
 void zhixueHelper::parseHomework(Homework& homework) {
 	if(homework.sections.size() != 0)return;
-	CreateAndWaitForEnd([&]() {
+	WaitPopupWindow::CreateAndWaitForEnd("正在加载作业详情", [&]() {
 		{
 			QString sections = WebHelper::getHomeworkSectionFromUrl(QString2Ascii(homework.classes[0].url).c_str());
 			QJsonDocument doc = parseJson(sections);
@@ -175,7 +162,7 @@ void zhixueHelper::parseHomework(Homework& homework) {
 				clazz.students.push_back(parseOneStu(v.toObject()));
 			}
 		}
-	}, "正在加载作业详情");
+	});
 }
 
 bool zhixueHelper::uploadOneMark(Homework& homework, int clazz_index,
@@ -212,13 +199,13 @@ bool zhixueHelper::uploadOneMark(const UploadMarkPack& p) {
 
 bool zhixueHelper::uploadMarks(QVector<UploadMarkPack>& packs) {
 	bool b;
-	CreateAndWaitForEnd([&]() {
+	WaitPopupWindow::CreateAndWaitForEnd("正在上传得分数据", [&]() {
 		for(auto& p : packs) {
 			if(!uploadOneMark(p)) {
 				b = false;
 			}
 		}
 		b = true;
-	}, "正在上传得分数据");
+	});
 	return b;
 }
